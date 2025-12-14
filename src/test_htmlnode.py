@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 
 class TestHTMLNode(unittest.TestCase):
@@ -61,10 +61,78 @@ class TestLeafNode(unittest.TestCase):
         self.assertEqual(node.to_html(), expected_output)
 
     def test_leaf_to_html_no_value(self):
-        node_details = {"tag": "p"}
+        node_details = {
+            "tag": "p",
+            "value": None,
+        }
         node = LeafNode(**node_details)
         with self.assertRaises(ValueError):
             node.to_html()
+
+
+class TestParentNode(unittest.TestCase):
+    def test_to_html_with_children(self):
+        child_node = LeafNode("span", "child")
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(parent_node.to_html(), "<div><span>child</span></div>")
+
+    def test_to_html_with_grandchildren(self):
+        grandchild_node = LeafNode("b", "grandchild")
+        child_node = ParentNode("span", [grandchild_node])
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(
+            parent_node.to_html(), "<div><span><b>grandchild</b></span></div>"
+        )
+
+    def test_to_html_with_several_children(self):
+        child_node = [
+            LeafNode("b", "Bold text"),
+            LeafNode(None, "Normal text"),
+            LeafNode("i", "Italic text"),
+            LeafNode(None, "Normal text"),
+        ]
+        parent_node = ParentNode("p", child_node)
+        self.assertEqual(
+            parent_node.to_html(),
+            "<p><b>Bold text</b>Normal text<i>Italic text</i>Normal text</p>",
+        )
+
+    def test_to_html_with_no_children(self):
+        parent_node = ParentNode("div", None)
+        with self.assertRaises(ValueError):
+            parent_node.to_html()
+
+    def test_to_html_with_no_tag(self):
+        parent_node = ParentNode(None, "Text")
+        with self.assertRaises(ValueError):
+            parent_node.to_html()
+
+    # ---START HERE AND UPDATE THESE TO USE PROPS---
+    def test_to_html_with_children(self):
+        child_node = LeafNode("span", "child")
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(parent_node.to_html(), "<div><span>child</span></div>")
+
+    def test_to_html_with_grandchildren(self):
+        grandchild_node = LeafNode("b", "grandchild")
+        child_node = ParentNode("span", [grandchild_node])
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(
+            parent_node.to_html(), "<div><span><b>grandchild</b></span></div>"
+        )
+
+    def test_to_html_with_several_children(self):
+        child_node = [
+            LeafNode("b", "Bold text"),
+            LeafNode(None, "Normal text"),
+            LeafNode("i", "Italic text"),
+            LeafNode(None, "Normal text"),
+        ]
+        parent_node = ParentNode("p", child_node)
+        self.assertEqual(
+            parent_node.to_html(),
+            "<p><b>Bold text</b>Normal text<i>Italic text</i>Normal text</p>",
+        )
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 from textnode import TextNode, TextType
 
 
@@ -22,6 +22,18 @@ def main():
     print(f"HTMLNode: {html_node}")
     print(f"HTML Node Props to HTML: {html_node.props_to_html()}")
     print(html_node.props.items())
+
+    parent_node = ParentNode(
+        "p",
+        [
+            LeafNode("b", "Bold text"),
+            LeafNode(None, "Normal text"),
+            LeafNode("i", "Italic text"),
+            LeafNode(None, "Normal text"),
+        ],
+    )
+
+    print(parent_node.to_html())
 
 
 if __name__ == "__main__":
