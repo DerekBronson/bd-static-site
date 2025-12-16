@@ -3,37 +3,28 @@ from textnode import TextNode, TextType
 
 
 def main():
-    text_node = TextNode(
-        "This is some anchor text", TextType.LINK, "https://www.boot.dev"
-    )
-    print(f"TextNode: {text_node}")
+    return
 
-    html_node_details = {
-        "tag": "a",
-        "value": "https://www.boots.dev",
-        "children": None,
-        "props": {
-            "href": "https://www.boots.dev",
-            "target": "_blank",
-        },
-    }
 
-    html_node = HTMLNode(**html_node_details)
-    print(f"HTMLNode: {html_node}")
-    print(f"HTML Node Props to HTML: {html_node.props_to_html()}")
-    print(html_node.props.items())
-
-    parent_node = ParentNode(
-        "p",
-        [
-            LeafNode("b", "Bold text"),
-            LeafNode(None, "Normal text"),
-            LeafNode("i", "Italic text"),
-            LeafNode(None, "Normal text"),
-        ],
-    )
-
-    print(parent_node.to_html())
+def text_node_to_html_node(text_node):
+    if text_node.text_type == TextType.TEXT:
+        return HTMLNode(tag=None, value=text_node.text)
+    elif text_node.text_type == TextType.LINK:
+        return HTMLNode(
+            tag="a",
+            value=text_node.url,
+            children=None,
+            props={"href": text_node.url, "target": "_blank"},
+        )
+    elif text_node.text_type == TextType.IMAGE:
+        return HTMLNode(
+            tag="img",
+            value=text_node.url,
+            children=None,
+            props={"src": text_node.url, "alt": text_node.alt_text},
+        )
+    else:
+        raise ValueError(f"Unsupported text type: {text_node.text_type}")
 
 
 if __name__ == "__main__":

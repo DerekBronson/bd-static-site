@@ -47,9 +47,13 @@ class ParentNode(HTMLNode):
     def to_html(self):
         if self.tag is None:
             raise ValueError("Node tag must be provided")
-        if self.children is None:
+        if self.children is None or len(self.children) == 0:
             raise ValueError("Node children must be provided")
-        converted_string = f"<{self.tag}>"
+        if self.props is None:
+            converted_string = f"<{self.tag}>"
+        else:
+            props_output = super().props_to_html()
+            converted_string = f"<{self.tag} {props_output}>"
         for child in self.children:
             converted_string += child.to_html()
         converted_string += f"</{self.tag}>"
