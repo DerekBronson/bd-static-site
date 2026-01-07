@@ -1,14 +1,13 @@
 import unittest
 
-import htmlnode
-import main
-import textnode
+from node_conversion import text_node_to_html_node
+from textnode import TextNode, TextType
 
 
 class TestConversion(unittest.TestCase):
     def test_text(self):
-        node = textnode.TextNode("This is a text node", textnode.TextType.TEXT)
-        html_node = main.text_node_to_html_node(node)
+        node = TextNode("This is a text node", TextType.TEXT)
+        html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, None)
         self.assertEqual(html_node.value, "This is a text node")
 

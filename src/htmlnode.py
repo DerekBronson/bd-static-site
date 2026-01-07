@@ -6,7 +6,7 @@ class HTMLNode:
         self.props = props
 
     def to_html(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     def props_to_html(self):
         if self.props is None or not isinstance(self.props, dict):
